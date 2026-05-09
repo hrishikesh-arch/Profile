@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hrishikesh — AI & ML Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root{
+  --bg:#02020a;--surface:#07071a;--card:#0c0c22;
+  --b:rgba(138,80,255,.22);
+  --v1:#8a50ff;--v2:#00ffcc;--v3:#ff2d78;
+  --v4:#ffcc00;--v5:#00c8ff;--v6:#ff7730;
+  --text:#f5f0ff;--muted:#8878bb;
+  --mono:'DM Mono',monospace;
+  --sans:'Plus Jakarta Sans',sans-serif;
+  --display:'Rajdhani',sans-serif;
+  --serif:'Instrument Serif',serif;
+  --ease:cubic-bezier(.23,1,.32,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden;cursor:none;}
+
+/* ═══ LOADER ═══ */
+#loader{
+  position:fixed;inset:0;z-index:10000;
+  background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  transition:opacity .7s var(--ease), transform .7s var(--ease);
+  overflow:hidden;
+}
+#loader::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(138,80,255,.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+#loader.out{opacity:0;transform:scale(1.05);pointer-events:none;}
+
+/* loader scanline grid — z-index below children */
+#loader::after{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(138,80,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(138,80,255,.03) 1px,transparent 1px);
+  background-size:44px 44px;
+  pointer-events:none;z-index:0;
+}
+/* ensure all direct children sit above the pseudo */
+#loader > *{position:relative;z-index:1;}
+
+/* ── loader avatar jump-in ── */
+.ld-avatar{
+  width:160px;height:200px;position:relative;flex-shrink:0;
+  opacity:0;
+  transform:translateY(100px) scaleX(.4) rotate(-10deg);
+  animation:ldAvatarIn 1.1s .05s var(--ease) forwards;
+}
+@keyframes ldAvatarIn{
+  0%  {opacity:0;transform:translateY(80px) scaleX(.5) rotate(-8deg);}
+  55% {opacity:1;transform:translateY(-14px) scaleX(1.04) rotate(3deg);}
+  75% {transform:translateY(4px) scaleX(.98) rotate(-1deg);}
+  100%{opacity:1;transform:translateY(0) scaleX(1) rotate(0deg);}
+}
+/* glow halo beneath avatar */
+.ld-avatar::after{
+  content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
+  width:70px;height:10px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(138,80,255,.55) 0%,transparent 70%);
+  animation:ldGlowPulse 1.6s 1s ease infinite;
+}
+@keyframes ldGlowPulse{0%,100%{opacity:.7;width:70px;}50%{opacity:1;width:86px;}}
+/* orbit ring */
+.ld-av-ring{
+  position:absolute;inset:-18px;border-radius:50%;
+  border:1px dashed rgba(138,80,255,.35);
+  animation:ldRingSpin 2.8s linear infinite;pointer-events:none;
+}
+.ld-av-ring::before{
+  content:'';position:absolute;width:9px;height:9px;
+  background:var(--v2);border-radius:50%;
+  top:-4.5px;left:50%;transform:translateX(-50%);
+  box-shadow:0 0 12px var(--v2);
+}
+.ld-av-ring::after{
+  content:'';position:absolute;width:6px;height:6px;
+  background:var(--v3);border-radius:50%;
+  bottom:-3px;right:10%;
+  box-shadow:0 0 8px var(--v3);
+}
+@keyframes ldRingSpin{to{transform:rotate(360deg);}}
+.ld-av-svg{width:100%;height:100%;display:block;filter:drop-shadow(0 0 14px rgba(138,80,255,.6));}
+
+.ld-name{
+  font-family:var(--display);
+  font-size:clamp(44px,8vw,104px);font-weight:700;letter-spacing:6px;
+  overflow:hidden;display:flex;
+}
+.ld-char{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--v1),var(--v2),var(--v3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  transform:translateY(100%);
+  animation:charIn .6s var(--ease) forwards;
+}
+@keyframes charIn{to{transform:translateY(0);}}
+
+/* loader tagline */
+.ld-tagline{
+  font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.22em;
+  display:flex;align-items:center;gap:10px;
+  opacity:0;animation:ldTagIn .6s .8s var(--ease) forwards;
+}
+.ld-tagline::before,.ld-tagline::after{content:'';flex:1;max-width:32px;height:1px;background:rgba(138,80,255,.35);}
+@keyframes ldTagIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* chips row */
+.ld-chips{
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+  opacity:0;animation:ldTagIn .6s 1.0s var(--ease) forwards;
+}
+.ld-chip{
+  padding:4px 12px;border-radius:100px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  border:1px solid;position:relative;overflow:hidden;
+}
+.ld-chip.c1{border-color:rgba(138,80,255,.4);color:var(--v1);background:rgba(138,80,255,.08);}
+.ld-chip.c2{border-color:rgba(0,255,204,.35);color:var(--v2);background:rgba(0,255,204,.06);}
+.ld-chip.c3{border-color:rgba(255,45,120,.35);color:var(--v3);background:rgba(255,45,120,.06);}
+
+.ld-bar-wrap{width:220px;height:2px;background:rgba(138,80,255,.15);border-radius:2px;overflow:hidden;}
+.ld-bar{height:100%;width:0;background:linear-gradient(90deg,var(--v1),var(--v2),var(--v3));border-radius:2px;transition:width .05s linear;}
+.ld-pct{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.2em;}
+
+/* status line under bar */
+.ld-status{
+  font-family:var(--mono);font-size:10px;color:rgba(136,120,187,.5);letter-spacing:.14em;
+  opacity:0;animation:ldTagIn .5s 1.2s var(--ease) forwards;
+  height:14px;
+}
+/* quote line */
+.ld-quote{
+  font-family:var(--serif);font-style:italic;font-size:13px;color:var(--muted);
+  text-align:center;line-height:1.7;max-width:280px;
+  opacity:0;animation:ldTagIn .6s 1.1s var(--ease) forwards;
+}
+
+/* ═══ CURSOR ═══ */
+#cur{position:fixed;width:8px;height:8px;background:var(--v1);border-radius:50%;pointer-events:none;z-index:9999;mix-blend-mode:screen;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s,opacity .2s;}
+#cur-r{position:fixed;width:36px;height:36px;border:1.5px solid rgba(138,80,255,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s var(--ease),height .3s var(--ease),border-color .3s,opacity .3s;}
+.cur-trail{position:fixed;width:5px;height:5px;border-radius:50%;pointer-events:none;z-index:9997;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+
+/* ═══ 3D CANVAS BG ═══ */
+#c3d{position:fixed;inset:0;z-index:0;opacity:.75;}
+
+/* ═══ AMBIENT ORBS ═══ */
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;animation:orbF linear infinite;}
+@keyframes orbF{0%,100%{transform:translate(0,0);}25%{transform:translate(30px,-40px);}50%{transform:translate(-20px,20px);}75%{transform:translate(40px,30px);}}
+
+/* ═══ SCANLINES ═══ */
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.025) 0,rgba(0,0,0,.025) 1px,transparent 1px,transparent 2px);pointer-events:none;z-index:9990;}
+
+/* ═══ NAV ═══ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  padding:18px 56px;display:flex;justify-content:space-between;align-items:center;
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  background:rgba(2,2,10,.55);border-bottom:1px solid var(--b);
+  transition:padding .4s var(--ease),background .4s;
+}
+nav.scrolled{padding:12px 56px;background:rgba(2,2,10,.85);}
+.logo{font-size:17px;font-weight:800;letter-spacing:2px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px;transition:opacity .2s;}
+.logo:hover{opacity:.8;}
+.logo-dot{width:9px;height:9px;border-radius:50%;background:var(--v1);animation:pdot 2.2s ease infinite;}
+@keyframes pdot{0%,100%{box-shadow:0 0 0 0 rgba(138,80,255,.7);}50%{box-shadow:0 0 0 10px rgba(138,80,255,0);}}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{font-family:var(--mono);font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:.08em;transition:color .25s;position:relative;padding:4px 0;}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:linear-gradient(90deg,var(--v1),var(--v2));transition:width .35s var(--ease);}
+.nav-links a:hover{color:var(--text);}
+.nav-links a:hover::after{width:100%;}
+.nav-links a.active{color:var(--text);}
+.nav-links a.active::after{width:100%;}
+
+/* ═══ PROGRESS BAR ═══ */
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--v1),var(--v2),var(--v3));z-index:9999;width:0;transition:width .1s linear;}
+
+/* ═══ HERO ═══ */
+#hero{
+  position:relative;z-index:1;min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 56px;padding-top:100px;overflow:hidden;
+}
+/* Parallax layers */
+.para-layer{position:absolute;inset:0;pointer-events:none;will-change:transform;}
+
+.hero-eye{
+  font-family:var(--mono);font-size:11px;color:var(--v2);letter-spacing:.22em;
+  margin-bottom:28px;display:flex;align-items:center;gap:14px;
+  opacity:0;animation:fadeSlide .8s .2s var(--ease) forwards;
+}
+.hero-eye::before{content:'';width:36px;height:1px;background:var(--v2);}
+
+/* HRISHIKESH — letter-by-letter 3D entrance */
+.hero-name{
+  display:inline-flex;align-items:flex-end;line-height:.9;margin-bottom:18px;gap:0;
+  perspective:800px;
+}
+.hero-name .nl{
+  display:inline-block;
+  font-family:var(--display);
+  font-size:clamp(68px,10.5vw,145px);font-weight:700;letter-spacing:2px;
+  opacity:0;
+  animation:letterDrop .7s var(--ease) forwards;
+  transform-origin:top center;
+}
+.hero-name .nl.solid{color:var(--text);}
+.hero-name .nl.outline{-webkit-text-stroke:2.5px var(--v1);color:transparent;}
+@keyframes letterDrop{
+  from{opacity:0;transform:rotateX(-90deg) translateY(-20px);}
+  to{opacity:1;transform:rotateX(0deg) translateY(0);}
+}
+
+.hero-role{
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(20px,2.8vw,42px);color:var(--muted);
+  margin-bottom:34px;
+  opacity:0;animation:fadeSlide .8s .85s var(--ease) forwards;
+}
+.hero-role em{color:var(--v1);}
+
+.hero-desc{
+  max-width:500px;font-size:16px;line-height:1.8;color:var(--muted);
+  margin-bottom:44px;
+  opacity:0;animation:fadeSlide .8s 1s var(--ease) forwards;
+}
+
+.hero-ctas{
+  display:flex;gap:14px;flex-wrap:wrap;
+  opacity:0;animation:fadeSlide .8s 1.15s var(--ease) forwards;
+}
+.btn-p{
+  padding:14px 32px;background:linear-gradient(135deg,var(--v1),#c060ff);
+  color:#fff;font-family:var(--sans);font-size:14px;font-weight:700;
+  border:none;border-radius:8px;text-decoration:none;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:transform .25s var(--ease),box-shadow .25s;
+  position:relative;overflow:hidden;
+}
+.btn-p::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);opacity:0;transition:opacity .25s;}
+.btn-p:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 16px 48px rgba(138,80,255,.55);}
+.btn-p:hover::after{opacity:1;}
+.btn-p:active{transform:translateY(0) scale(.98);}
+.btn-o{
+  padding:14px 32px;border:1px solid var(--b);color:var(--text);
+  font-family:var(--sans);font-size:14px;font-weight:700;
+  border-radius:8px;text-decoration:none;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:all .25s var(--ease);
+}
+.btn-o:hover{border-color:var(--v2);color:var(--v2);transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,255,204,.15);}
+.btn-o:active{transform:translateY(0);}
+
+.scroll-hint{
+  position:absolute;bottom:38px;left:56px;
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.18em;
+  opacity:0;animation:fadeSlide 1s 1.5s var(--ease) forwards;
+}
+.scroll-bar{width:44px;height:1px;background:rgba(136,120,187,.25);overflow:hidden;position:relative;}
+.scroll-bar::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--v1);animation:sbar 2.2s ease infinite;}
+@keyframes sbar{to{left:100%;}}
+
+/* HERO STAT CARDS */
+.hero-stats{
+  position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:12px;
+  opacity:0;animation:fadeSlide .8s 1.2s var(--ease) forwards;
+}
+@media(max-width:1500px){.hero-stats{display:none;}}
+.sc{
+  background:rgba(12,12,34,.9);border:1px solid var(--b);border-radius:16px;
+  padding:22px 26px;min-width:155px;backdrop-filter:blur(24px);
+  position:relative;overflow:hidden;
+  transition:border-color .3s,box-shadow .3s;
+  transform-style:preserve-3d;will-change:transform;
+}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;}
+.sc.a::before{background:linear-gradient(90deg,var(--v1),#c060ff);}
+.sc.b::before{background:linear-gradient(90deg,var(--v2),#00aaff);}
+.sc.c::before{background:linear-gradient(90deg,var(--v3),var(--v6));}
+.sc.d::before{background:linear-gradient(90deg,var(--v4),#ffaa00);}
+.sc:hover{border-color:rgba(138,80,255,.5);box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 40px rgba(138,80,255,.15);}
+.sc-num{font-size:34px;font-weight:800;line-height:1;margin-bottom:4px;}
+.sc.a .sc-num{background:linear-gradient(135deg,var(--v1),#c060ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.sc.b .sc-num{background:linear-gradient(135deg,var(--v2),#00aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.sc.c .sc-num{background:linear-gradient(135deg,var(--v3),var(--v6));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.sc.d .sc-num{background:linear-gradient(135deg,var(--v4),#ffaa00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.sc-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+
+/* ═══ SECTION BASE ═══ */
+section{position:relative;z-index:1;padding:130px 56px;}
+.sec-lbl{font-family:var(--mono);font-size:11px;color:var(--v2);letter-spacing:.26em;margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.sec-lbl::before{content:'';width:26px;height:1px;background:var(--v2);}
+.sec-title{font-family:var(--display);font-size:clamp(40px,5.5vw,72px);font-weight:700;letter-spacing:1px;line-height:1;margin-bottom:64px;}
+.grad{background:linear-gradient(135deg,var(--v1) 0%,var(--v2) 45%,var(--v3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* ═══ REVEAL SYSTEM ═══ */
+/* 5 entrance types */
+.rv{opacity:0;will-change:transform,opacity;transition:opacity .75s var(--ease),transform .75s var(--ease);}
+.rv.up{transform:translateY(50px);}
+.rv.left{transform:translateX(-60px);}
+.rv.right{transform:translateX(60px);}
+.rv.scale{transform:scale(.88);}
+.rv.rotate{transform:rotateX(-30deg) translateY(30px);transform-origin:top center;}
+.rv.visible{opacity:1;transform:none;}
+
+/* ═══ ABOUT ═══ */
+#about{background:var(--surface);}
+#about .ag{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.at p{font-size:17px;line-height:1.85;color:var(--muted);margin-bottom:20px;}
+.at p strong{color:var(--text);}
+.hl{color:var(--v1);font-family:var(--serif);font-style:italic;font-size:21px;}
+
+/* 3D SPINNING CUBE */
+.cube-scene{width:200px;height:200px;perspective:700px;margin:0 auto 36px;}
+.cube{width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:spinC 12s linear infinite;}
+.cube:hover{animation-play-state:paused;}
+@keyframes spinC{from{transform:rotateX(22deg) rotateY(0);}to{transform:rotateX(22deg) rotateY(360deg);}}
+.cf{position:absolute;width:200px;height:200px;border:1.5px solid rgba(138,80,255,.35);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.05em;backdrop-filter:blur(4px);}
+.cf-f{transform:translateZ(100px);background:rgba(138,80,255,.1);color:var(--v1);}
+.cf-b{transform:rotateY(180deg) translateZ(100px);background:rgba(0,255,204,.07);color:var(--v2);}
+.cf-l{transform:rotateY(-90deg) translateZ(100px);background:rgba(255,45,120,.07);color:var(--v3);}
+.cf-r{transform:rotateY(90deg) translateZ(100px);background:rgba(255,204,0,.08);color:var(--v4);}
+.cf-t{transform:rotateX(90deg) translateZ(100px);background:rgba(0,200,255,.07);color:var(--v5);}
+.cf-bo{transform:rotateX(-90deg) translateZ(100px);background:rgba(255,119,48,.07);color:var(--v6);}
+
+.skills-cloud{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.stag{
+  padding:8px 16px;border:1px solid var(--b);border-radius:100px;
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+  transition:all .25s var(--ease);cursor:default;
+  position:relative;overflow:hidden;
+}
+.stag::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--v1),var(--v2));opacity:0;transition:opacity .25s;}
+.stag span{position:relative;z-index:1;}
+.stag:hover{border-color:transparent;color:#fff;transform:translateY(-2px) scale(1.06);box-shadow:0 6px 20px rgba(138,80,255,.35);}
+.stag:hover::before{opacity:1;}
+.stag.h1{border-color:rgba(138,80,255,.45);color:var(--v1);}
+.stag.h2{border-color:rgba(0,255,204,.35);color:var(--v2);}
+.stag.h3{border-color:rgba(255,45,120,.35);color:var(--v3);}
+
+/* ═══ PROJECTS ═══ */
+#projects{background:var(--bg);}
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;}
+.pc{
+  background:var(--card);border:1px solid var(--b);border-radius:20px;
+  padding:36px;position:relative;overflow:hidden;
+  transition:transform .4s var(--ease),border-color .3s,box-shadow .4s;
+  text-decoration:none;display:block;color:inherit;
+  transform-style:preserve-3d;will-change:transform;
+}
+.pc::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(138,80,255,.16) 0%,transparent 55%);
+  opacity:0;transition:opacity .35s;
+}
+.pc::after{
+  content:'';position:absolute;inset:0;border-radius:20px;
+  background:linear-gradient(135deg,rgba(138,80,255,.06),transparent);
+  opacity:0;transition:opacity .35s;
+}
+.pc:hover::before,.pc:hover::after{opacity:1;}
+.pc:hover{
+  transform:translateY(-10px) rotateX(4deg) rotateY(-1.5deg);
+  border-color:rgba(138,80,255,.6);
+  box-shadow:0 36px 100px rgba(0,0,0,.7),0 0 80px rgba(138,80,255,.14);
+}
+.pc:active{transform:translateY(-4px) scale(.99);}
+.pc.feat{grid-column:span 2;display:grid;grid-template-columns:1.3fr 1fr;gap:48px;align-items:center;padding:52px;}
+.pnum{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.14em;margin-bottom:14px;}
+.ptag{display:inline-block;padding:4px 11px;border-radius:5px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;margin-bottom:14px;margin-right:6px;transition:transform .2s;}
+.ptag:hover{transform:scale(1.08);}
+.t-ai{background:rgba(138,80,255,.2);color:var(--v1);}
+.t-web{background:rgba(0,255,204,.15);color:var(--v2);}
+.t-hlth{background:rgba(255,45,120,.15);color:var(--v3);}
+.t-env{background:rgba(0,200,255,.15);color:var(--v5);}
+.ptitle{font-size:25px;font-weight:700;margin-bottom:12px;letter-spacing:-.5px;line-height:1.2;transition:color .2s;}
+.pc:hover .ptitle{color:var(--v1);}
+.pdesc{font-size:14px;line-height:1.8;color:var(--muted);margin-bottom:22px;}
+.ptech{display:flex;flex-wrap:wrap;gap:8px;}
+.techp{
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  padding:4px 10px;border:1px solid rgba(255,255,255,.07);border-radius:4px;
+  transition:all .2s;
+}
+.techp:hover{border-color:var(--v1);color:var(--v1);}
+.plink{
+  position:absolute;top:36px;right:36px;width:36px;height:36px;
+  border:1px solid var(--b);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);transition:all .3s var(--ease);font-size:15px;
+}
+.pc:hover .plink{background:var(--v1);border-color:var(--v1);color:#fff;transform:rotate(45deg) scale(1.1);}
+
+/* project visuals */
+.pvis{border-radius:14px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.pv-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(138,80,255,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(138,80,255,.1) 1px,transparent 1px);background-size:26px 26px;animation:gridScroll 8s linear infinite;}
+@keyframes gridScroll{to{background-position:26px 26px;}}
+.pv1{background:linear-gradient(135deg,rgba(255,45,120,.22),rgba(138,80,255,.22));border:1px solid rgba(255,45,120,.22);height:100%;min-height:210px;}
+.pv2{background:linear-gradient(135deg,rgba(0,255,204,.15),rgba(138,80,255,.18));border:1px solid rgba(0,255,204,.2);height:130px;margin-top:20px;}
+.pv3{background:linear-gradient(135deg,rgba(0,200,255,.18),rgba(0,255,204,.15));border:1px solid rgba(0,200,255,.22);height:130px;margin-top:20px;}
+.pv4{background:linear-gradient(135deg,rgba(138,80,255,.22),rgba(255,204,0,.15));border:1px solid rgba(138,80,255,.24);height:130px;margin-top:20px;}
+.pv-blob{position:absolute;border-radius:50%;filter:blur(32px);animation:blobf 4s ease-in-out infinite;}
+@keyframes blobf{0%,100%{transform:translate(0,0);}50%{transform:translate(16px,-16px);}}
+.pv-icon{position:absolute;font-size:60px;opacity:.5;left:50%;top:50%;transform:translate(-50%,-50%);transition:transform .35s var(--ease),opacity .35s;}
+.pc:hover .pv-icon{transform:translate(-50%,-50%) scale(1.15);opacity:.7;}
+
+/* ═══ JOURNEY ═══ */
+#journey{background:var(--surface);}
+.yr-badge{
+  display:inline-flex;align-items:center;gap:12px;padding:10px 24px;
+  border-radius:50px;margin-bottom:48px;
+  border:1px solid rgba(138,80,255,.3);background:rgba(138,80,255,.08);
+  transition:transform .25s,box-shadow .25s;
+}
+.yr-badge:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(138,80,255,.25);}
+.yr-badge span{background:linear-gradient(135deg,var(--v1),var(--v2),var(--v3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:26px;font-weight:800;letter-spacing:-1px;}
+.yr-arrow{color:var(--muted);font-size:18px;}
+
+.tl{max-width:720px;position:relative;}
+.tl::before{content:'';position:absolute;left:18px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--v1),var(--v2),var(--v3),transparent);}
+.tli{padding-left:58px;margin-bottom:62px;position:relative;}
+.tli-dot{
+  position:absolute;left:10px;top:6px;width:18px;height:18px;
+  border-radius:50%;border:2px solid var(--v1);background:var(--bg);
+  transition:all .35s var(--ease);display:flex;align-items:center;justify-content:center;
+}
+.tli-dot::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--v1);transition:transform .35s var(--ease);}
+.tli:hover .tli-dot{box-shadow:0 0 30px rgba(138,80,255,.9),0 0 60px rgba(138,80,255,.3);transform:scale(1.4);}
+.tli:hover .tli-dot::after{transform:scale(1.3);}
+.tli-date{font-family:var(--mono);font-size:11px;color:var(--v2);letter-spacing:.16em;margin-bottom:8px;}
+.tli-title{font-size:22px;font-weight:700;margin-bottom:4px;transition:color .2s;}
+.tli:hover .tli-title{color:var(--v1);}
+.tli-sub{font-size:13px;color:var(--v1);font-family:var(--mono);margin-bottom:10px;}
+.tli-desc{font-size:14px;line-height:1.8;color:var(--muted);}
+
+/* ═══ STACK ═══ */
+#stack{background:var(--bg);}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:16px;}
+.si{
+  background:var(--card);border:1px solid var(--b);border-radius:14px;
+  padding:26px 16px;text-align:center;
+  transition:all .3s var(--ease);position:relative;overflow:hidden;
+  transform-style:preserve-3d;cursor:default;
+}
+.si::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,var(--v1),var(--v2),var(--v3));transform:scaleX(0);transition:transform .35s var(--ease);}
+.si::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(138,80,255,.06),transparent);opacity:0;transition:opacity .3s;}
+.si:hover{border-color:rgba(138,80,255,.55);transform:translateY(-8px);box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 40px rgba(138,80,255,.2);}
+.si:hover::before{transform:scaleX(1);}
+.si:hover::after{opacity:1;}
+.si-icon{font-size:34px;margin-bottom:10px;display:block;transition:transform .35s var(--ease);}
+.si:hover .si-icon{transform:scale(1.2) rotate(-5deg);}
+.si-name{font-family:var(--mono);font-size:12px;color:var(--muted);transition:color .2s;}
+.si:hover .si-name{color:var(--text);}
+.si-cat{font-size:10px;color:rgba(136,120,187,.35);margin-top:4px;font-family:var(--mono);}
+
+/* ═══ CONTACT ═══ */
+#contact{background:var(--surface);text-align:center;}
+.ctbig{font-family:var(--display);font-size:clamp(52px,9vw,120px);font-weight:700;letter-spacing:2px;line-height:.95;margin-bottom:28px;}
+.ctbig .outline{-webkit-text-stroke:2.5px rgba(138,80,255,.55);color:transparent;}
+.ctbig .lit{background:linear-gradient(135deg,var(--v1),var(--v2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.ct-sub{font-family:var(--mono);font-size:16px;color:var(--v1);margin-bottom:36px;letter-spacing:.05em;}
+/* direct contact row */
+.ct-direct{
+  display:flex;justify-content:center;gap:16px;flex-wrap:wrap;
+  margin-bottom:40px;
+}
+.ct-info{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:12px 22px;border-radius:12px;
+  border:1px solid var(--b);
+  font-family:var(--mono);font-size:13px;color:var(--text);
+  text-decoration:none;
+  background:rgba(12,12,34,.6);backdrop-filter:blur(12px);
+  transition:all .3s var(--ease);position:relative;overflow:hidden;
+}
+.ct-info::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--v1),var(--v2));opacity:0;transition:opacity .3s;}
+.ct-info span{position:relative;z-index:1;}
+.ct-info:hover{border-color:transparent;color:#fff;transform:translateY(-3px);box-shadow:0 10px 32px rgba(138,80,255,.3);}
+.ct-info:hover::before{opacity:1;}
+.ct-icon{position:relative;z-index:1;display:flex;align-items:center;}
+.slinks{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;}
+.sbtn{
+  display:inline-flex;align-items:center;gap:9px;padding:13px 26px;
+  border:1px solid var(--b);border-radius:10px;
+  font-family:var(--mono);font-size:13px;color:var(--muted);text-decoration:none;
+  transition:all .3s var(--ease);position:relative;overflow:hidden;
+}
+.sbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--v1),var(--v2));opacity:0;transition:opacity .3s;}
+.sbtn span{position:relative;z-index:1;}
+.sbtn:hover{border-color:transparent;color:#fff;transform:translateY(-3px);box-shadow:0 10px 32px rgba(138,80,255,.3);}
+.sbtn:hover::before{opacity:1;}
+.sbtn:active{transform:translateY(0);}
+
+/* ═══ FOOTER ═══ */
+footer{
+  position:relative;z-index:1;padding:28px 56px;
+  border-top:1px solid var(--b);
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+}
+footer .gr{background:linear-gradient(135deg,var(--v1),var(--v2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;}
+
+/* ═══ SCROLL INDICATOR ═══ */
+.section-in-view::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(to bottom,var(--v1),var(--v2));
+  transform:scaleY(0);transform-origin:top;
+  animation:lineGrow .8s var(--ease) forwards;
+}
+@keyframes lineGrow{to{transform:scaleY(1);}}
+
+/* ═══ PARALLAX HERO SHAPES ═══ */
+.hero-shape{position:absolute;pointer-events:none;opacity:0;animation:fadeShape 1.5s 1.5s ease forwards;}
+@keyframes fadeShape{to{opacity:1;}}
+
+/* ═══ MICRO: MAGNETIC BUTTON ═══ */
+.mag{display:inline-block;transition:transform .3s var(--ease);}
+
+@keyframes fadeSlide{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+/* ═══ RIPPLE ═══ */
+.ripple{position:absolute;border-radius:50%;background:rgba(138,80,255,.3);transform:scale(0);animation:rippleOut .6s ease-out forwards;pointer-events:none;}
+@keyframes rippleOut{to{transform:scale(4);opacity:0;}}
+
+/* ═══ 3D AVATAR ═══ */
+#avatar-wrap{
+  position:absolute;right:56px;top:50%;transform:translateY(-50%);
+  width:290px;height:390px;
+  opacity:0;animation:avatarIn 1.2s 1.6s var(--ease) forwards;
+  z-index:2;
+}
+@keyframes avatarIn{
+  0%{opacity:0;transform:translateY(-40%) scale(.85) rotateY(-25deg);}
+  60%{transform:translateY(-50%) scale(1.03) rotateY(4deg);}
+  100%{opacity:1;transform:translateY(-50%) scale(1) rotateY(0deg);}
+}
+#avatar-canvas{width:100%;height:100%;display:block;}
+
+/* name plate below avatar */
+.avatar-nameplate{
+  text-align:center;margin-top:-8px;
+  opacity:0;animation:namePlateIn .8s 2.4s var(--ease) forwards;
+}
+@keyframes namePlateIn{
+  from{opacity:0;transform:translateY(16px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.avatar-nameplate .avname{
+  font-size:15px;font-weight:800;letter-spacing:3px;
+  background:linear-gradient(135deg,var(--v1),var(--v2),var(--v3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  display:block;margin-bottom:4px;
+}
+.avatar-nameplate .avtitle{
+  font-family:var(--mono);font-size:10px;color:var(--muted);
+  letter-spacing:.2em;text-transform:uppercase;
+}
+/* floating ring around avatar */
+.avatar-ring{
+  position:absolute;left:50%;top:50%;
+  width:340px;height:340px;
+  transform:translate(-50%,-54%);
+  border:1px dashed rgba(138,80,255,.25);
+  border-radius:50%;
+  animation:ringRotate 18s linear infinite;
+  pointer-events:none;
+}
+.avatar-ring::before{
+  content:'';position:absolute;inset:-14px;border-radius:50%;
+  border:1px solid rgba(0,255,204,.15);
+}
+.avatar-ring::after{
+  content:'';position:absolute;inset:-28px;border-radius:50%;
+  border:1px dashed rgba(255,45,120,.12);
+}
+@keyframes ringRotate{to{transform:translate(-50%,-54%) rotate(360deg);}}
+/* orbit dots */
+.orb-dot{
+  position:absolute;width:8px;height:8px;border-radius:50%;
+  top:50%;left:50%;margin:-4px;
+  transform-origin:0 0;
+}
+/* scan line on avatar */
+.av-scan{
+  position:absolute;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(0,255,204,.5),transparent);
+  top:0;animation:avScan 3s ease-in-out infinite;
+  pointer-events:none;border-radius:2px;
+}
+@keyframes avScan{
+  0%{top:10%;opacity:0;}
+  10%{opacity:1;}
+  90%{opacity:1;}
+  100%{top:90%;opacity:0;}
+}
+/* status badge */
+.av-status{
+  position:absolute;bottom:56px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:7px;
+  background:rgba(12,12,34,.85);border:1px solid rgba(0,255,204,.3);
+  border-radius:100px;padding:6px 14px;
+  font-family:var(--mono);font-size:10px;color:var(--v2);
+  letter-spacing:.12em;white-space:nowrap;
+  opacity:0;animation:namePlateIn .6s 2.8s ease forwards;
+  backdrop-filter:blur(12px);
+}
+.av-status-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--v2);
+  animation:pdot 1.8s ease infinite;
+}
+
+@media(max-width:1100px){#avatar-wrap{display:none;}}
+@media(max-width:900px){
+  nav{padding:16px 24px;}section{padding:90px 24px;}
+  #hero{padding:0 24px;padding-top:90px;}
+  .hero-stats{display:none;}
+  .hero-name .nl{font-size:clamp(54px,17vw,88px);letter-spacing:-3px;}
+  #about .ag{grid-template-columns:1fr;gap:48px;}
+  .cube-scene{display:none;}
+  .pgrid{grid-template-columns:1fr;}
+  .pc.feat{grid-column:span 1;grid-template-columns:1fr;}
+  .ctbig{letter-spacing:-3px;}
+  footer{flex-direction:column;gap:12px;text-align:center;}
+  .nav-links{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOADER ═══ -->
+<div id="loader">
+  <div class="ld-avatar">
+    <div class="ld-av-ring"></div>
+    <!-- Detailed tech-guy SVG avatar -->
+    <svg class="ld-av-svg" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="gSkin" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#e8b89a"/>
+          <stop offset="100%" stop-color="#c8906a"/>
+        </linearGradient>
+        <linearGradient id="gHoodie" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#8a50ff"/>
+          <stop offset="60%" stop-color="#6030cc"/>
+          <stop offset="100%" stop-color="#4a20aa"/>
+        </linearGradient>
+        <linearGradient id="gHair" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#1a0a05"/>
+          <stop offset="100%" stop-color="#0d0503"/>
+        </linearGradient>
+        <linearGradient id="gScreen" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#00ffcc" stop-opacity=".15"/>
+          <stop offset="100%" stop-color="#8a50ff" stop-opacity=".3"/>
+        </linearGradient>
+        <filter id="avGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="6" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <radialGradient id="gGround" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#8a50ff" stop-opacity=".4"/>
+          <stop offset="100%" stop-color="#8a50ff" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- ground glow -->
+      <ellipse cx="80" cy="194" rx="52" ry="7" fill="url(#gGround)" opacity=".8"/>
+
+      <!-- ── BODY / HOODIE ── -->
+      <!-- main torso -->
+      <rect x="44" y="118" width="72" height="68" rx="12" fill="url(#gHoodie)"/>
+      <!-- hoodie pocket -->
+      <rect x="58" y="154" width="44" height="22" rx="6" fill="rgba(0,0,0,.25)"/>
+      <!-- hoodie drawstring -->
+      <line x1="75" y1="128" x2="72" y2="146" stroke="rgba(255,255,255,.2)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="85" y1="128" x2="88" y2="146" stroke="rgba(255,255,255,.2)" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- neckline -->
+      <path d="M68 118 Q80 126 92 118" stroke="rgba(0,0,0,.3)" stroke-width="2" fill="none"/>
+      <!-- chest glow badge -->
+      <rect x="70" y="134" width="20" height="11" rx="3" fill="rgba(0,255,204,.15)" stroke="#00ffcc" stroke-width=".8"/>
+      <rect x="73" y="137" width="5" height="5" rx="1" fill="#00ffcc" opacity=".8"/>
+      <rect x="80" y="138" width="7" height="1.5" rx=".5" fill="#00ffcc" opacity=".6"/>
+      <rect x="80" y="140.5" width="5" height="1.5" rx=".5" fill="#00ffcc" opacity=".4"/>
+      <!-- hoodie tech circuit lines -->
+      <path d="M44 140 L52 140 L52 148 L60 148" stroke="rgba(0,255,204,.35)" stroke-width="1" fill="none"/>
+      <circle cx="60" cy="148" r="1.5" fill="#00ffcc" opacity=".5"/>
+      <path d="M116 140 L108 140 L108 148 L100 148" stroke="rgba(138,80,255,.5)" stroke-width="1" fill="none"/>
+      <circle cx="100" cy="148" r="1.5" fill="#8a50ff" opacity=".6"/>
+
+      <!-- ── ARMS ── -->
+      <!-- left arm -->
+      <rect x="28" y="118" width="18" height="46" rx="9" fill="url(#gHoodie)"/>
+      <!-- left hand -->
+      <ellipse cx="37" cy="168" rx="9" ry="8" fill="url(#gSkin)"/>
+      <!-- right arm (slightly bent, holding laptop gesture) -->
+      <rect x="114" y="118" width="18" height="46" rx="9" fill="url(#gHoodie)"/>
+      <!-- right hand -->
+      <ellipse cx="123" cy="168" rx="9" ry="8" fill="url(#gSkin)"/>
+
+      <!-- ── NECK ── -->
+      <rect x="72" y="106" width="16" height="16" rx="5" fill="url(#gSkin)"/>
+
+      <!-- ── HEAD ── -->
+      <!-- skull base -->
+      <ellipse cx="80" cy="82" rx="34" ry="36" fill="url(#gSkin)"/>
+      <!-- cheekbones subtle shadow -->
+      <ellipse cx="56" cy="90" rx="8" ry="5" fill="rgba(180,100,60,.15)"/>
+      <ellipse cx="104" cy="90" rx="8" ry="5" fill="rgba(180,100,60,.15)"/>
+      <!-- jaw -->
+      <rect x="56" y="100" width="48" height="16" rx="8" fill="url(#gSkin)"/>
+      <!-- chin -->
+      <ellipse cx="80" cy="113" rx="16" ry="6" fill="url(#gSkin)"/>
+
+      <!-- ── HAIR ── -->
+      <!-- back of hair -->
+      <ellipse cx="80" cy="60" rx="35" ry="28" fill="url(#gHair)"/>
+      <!-- top hair shape -->
+      <path d="M46 72 Q44 52 58 46 Q68 40 80 42 Q92 40 102 46 Q116 52 114 72" fill="url(#gHair)"/>
+      <!-- fringe / forelock -->
+      <path d="M58 58 Q66 50 72 54 Q76 58 68 66" fill="url(#gHair)"/>
+      <path d="M70 52 Q80 46 88 52 Q84 60 78 62" fill="url(#gHair)"/>
+
+      <!-- ── EARS ── -->
+      <ellipse cx="46" cy="86" rx="6" ry="8" fill="url(#gSkin)"/>
+      <ellipse cx="114" cy="86" rx="6" ry="8" fill="url(#gSkin)"/>
+      <!-- earring - tech stud left -->
+      <circle cx="44" cy="86" r="2" fill="#00ffcc" filter="url(#avGlow)" opacity=".9"/>
+
+      <!-- ── GLASSES (techy look) ── -->
+      <!-- frame bridge -->
+      <line x1="71" y1="83" x2="89" y2="83" stroke="#2a1a4a" stroke-width="1.5"/>
+      <!-- left lens -->
+      <rect x="56" y="77" width="15" height="11" rx="4" fill="rgba(0,200,255,.08)" stroke="#4a2a88" stroke-width="1.2"/>
+      <!-- right lens -->
+      <rect x="89" y="77" width="15" height="11" rx="4" fill="rgba(0,200,255,.08)" stroke="#4a2a88" stroke-width="1.2"/>
+      <!-- lens glare left -->
+      <line x1="58" y1="79" x2="63" y2="79" stroke="rgba(255,255,255,.4)" stroke-width=".8" stroke-linecap="round"/>
+      <!-- lens glare right -->
+      <line x1="91" y1="79" x2="96" y2="79" stroke="rgba(255,255,255,.4)" stroke-width=".8" stroke-linecap="round"/>
+      <!-- arms of glasses -->
+      <line x1="56" y1="82" x2="46" y2="84" stroke="#4a2a88" stroke-width="1"/>
+      <line x1="104" y1="82" x2="114" y2="84" stroke="#4a2a88" stroke-width="1"/>
+
+      <!-- ── EYES ── -->
+      <ellipse cx="64" cy="83" rx="5" ry="4" fill="#0a0520"/>
+      <ellipse cx="96" cy="83" rx="5" ry="4" fill="#0a0520"/>
+      <!-- iris -->
+      <circle cx="64" cy="83" r="3" fill="#1a88cc"/>
+      <circle cx="96" cy="83" r="3" fill="#1a88cc"/>
+      <!-- pupils -->
+      <circle cx="64" cy="83" r="1.6" fill="#050510"/>
+      <circle cx="96" cy="83" r="1.6" fill="#050510"/>
+      <!-- catchlights -->
+      <circle cx="65.2" cy="81.8" r=".9" fill="white" opacity=".9"/>
+      <circle cx="97.2" cy="81.8" r=".9" fill="white" opacity=".9"/>
+
+      <!-- ── NOSE ── -->
+      <path d="M79 90 Q77 96 74 98 Q78 100 80 99 Q82 100 86 98 Q83 96 81 90" fill="rgba(180,100,60,.25)"/>
+
+      <!-- ── MOUTH ── -->
+      <!-- subtle smirk -->
+      <path d="M73 104 Q80 108 87 104" stroke="rgba(150,80,50,.6)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- upper lip line -->
+      <path d="M76 102 Q80 100 84 102" stroke="rgba(150,80,50,.4)" stroke-width="1" fill="none"/>
+
+      <!-- ── FLOATING HOLO UI ELEMENTS ── -->
+      <!-- left floating code panel -->
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;0.85;0.85;0.85" dur="0.5s" begin="0.9s" fill="freeze"/>
+        <rect x="2" y="70" width="36" height="44" rx="4" fill="rgba(10,5,30,.85)" stroke="rgba(138,80,255,.5)" stroke-width=".8"/>
+        <!-- code lines -->
+        <rect x="6" y="76" width="14" height="1.5" rx=".5" fill="#8a50ff" opacity=".8"/>
+        <rect x="6" y="80" width="22" height="1.5" rx=".5" fill="#00ffcc" opacity=".6"/>
+        <rect x="6" y="84" width="18" height="1.5" rx=".5" fill="#ff2d78" opacity=".5"/>
+        <rect x="6" y="88" width="24" height="1.5" rx=".5" fill="#00ffcc" opacity=".7"/>
+        <rect x="6" y="92" width="16" height="1.5" rx=".5" fill="#8a50ff" opacity=".5"/>
+        <rect x="6" y="96" width="20" height="1.5" rx=".5" fill="rgba(255,255,255,.3)"/>
+        <rect x="6" y="100" width="12" height="1.5" rx=".5" fill="#00ffcc" opacity=".4"/>
+        <rect x="6" y="104" width="18" height="1.5" rx=".5" fill="#8a50ff" opacity=".6"/>
+        <!-- blinking cursor -->
+        <rect x="6" y="108" width="4" height="1.8" rx=".4" fill="#00ffcc">
+          <animate attributeName="opacity" values="1;0;1" dur=".9s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+
+      <!-- right floating stats panel -->
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;0.85;0.85;0.85" dur="0.5s" begin="1.1s" fill="freeze"/>
+        <rect x="122" y="60" width="36" height="52" rx="4" fill="rgba(10,5,30,.85)" stroke="rgba(0,255,204,.4)" stroke-width=".8"/>
+        <!-- mini bar chart -->
+        <rect x="126" y="100" width="5" height="8" rx="1" fill="#8a50ff" opacity=".7"/>
+        <rect x="133" y="94" width="5" height="14" rx="1" fill="#00ffcc" opacity=".8"/>
+        <rect x="140" y="97" width="5" height="11" rx="1" fill="#ff2d78" opacity=".6"/>
+        <rect x="147" y="90" width="5" height="18" rx="1" fill="#8a50ff" opacity=".9"/>
+        <line x1="124" y1="109" x2="155" y2="109" stroke="rgba(255,255,255,.2)" stroke-width=".6"/>
+        <!-- label -->
+        <rect x="126" y="65" width="28" height="1.5" rx=".5" fill="rgba(255,255,255,.3)"/>
+        <rect x="126" y="69" width="20" height="1.5" rx=".5" fill="#00ffcc" opacity=".5"/>
+        <!-- pulse dot -->
+        <circle cx="150" cy="66" r="2" fill="#00ffcc">
+          <animate attributeName="r" values="2;3;2" dur="1.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".8;1;.8" dur="1.2s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+
+      <!-- top floating AI chip -->
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;0.9;0.9;0.9" dur="0.4s" begin="1.3s" fill="freeze"/>
+        <rect x="56" y="12" width="48" height="22" rx="5" fill="rgba(10,5,30,.9)" stroke="rgba(138,80,255,.6)" stroke-width=".8"/>
+        <rect x="60" y="16" width="8" height="8" rx="1.5" fill="#8a50ff" opacity=".8"/>
+        <rect x="72" y="17" width="16" height="1.5" rx=".5" fill="rgba(255,255,255,.5)"/>
+        <rect x="72" y="20.5" width="10" height="1.5" rx=".5" fill="#00ffcc" opacity=".6"/>
+        <rect x="72" y="24" width="13" height="1.5" rx=".5" fill="rgba(255,255,255,.2)"/>
+        <!-- connecting line to head -->
+        <line x1="80" y1="34" x2="80" y2="48" stroke="rgba(138,80,255,.3)" stroke-width=".8" stroke-dasharray="2 2"/>
+      </g>
+
+      <!-- sparkle particles -->
+      <circle cx="20" cy="48" r="2" fill="#00ffcc" opacity=".7" filter="url(#softGlow)">
+        <animate attributeName="opacity" values=".2;.9;.2" dur="1.6s" repeatCount="indefinite"/>
+        <animate attributeName="cy" values="48;44;48" dur="1.6s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="140" cy="44" r="1.5" fill="#ff2d78" opacity=".8" filter="url(#softGlow)">
+        <animate attributeName="opacity" values=".8;.2;.8" dur="1.1s" repeatCount="indefinite"/>
+        <animate attributeName="cy" values="44;40;44" dur="1.1s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="16" cy="136" r="1.8" fill="#ffcc00" opacity=".6">
+        <animate attributeName="opacity" values=".3;.8;.3" dur="1.9s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="144" cy="140" r="1.5" fill="#8a50ff" opacity=".7" filter="url(#softGlow)">
+        <animate attributeName="opacity" values=".6;1;.6" dur="1.4s" repeatCount="indefinite"/>
+      </circle>
+    </svg>
+  </div>
+  <div class="ld-name" id="ld-name"></div>
+  <div class="ld-tagline">AI &amp; ML ENGINEER</div>
+  <div class="ld-chips">
+    <span class="ld-chip c1">PYTHON</span>
+    <span class="ld-chip c2">MACHINE LEARNING</span>
+    <span class="ld-chip c3">FULL STACK</span>
+  </div>
+  <div class="ld-quote">"Turning data into decisions,<br>ideas into deployed products."</div>
+  <div class="ld-bar-wrap"><div class="ld-bar" id="ld-bar"></div></div>
+  <div class="ld-pct" id="ld-pct">0%</div>
+  <div class="ld-status" id="ld-status">INITIALIZING...</div>
+</div>
+
+<!-- ═══ SCROLL PROGRESS ═══ -->
+<div id="prog"></div>
+
+<!-- ═══ CURSOR ═══ -->
+<div id="cur"></div>
+<div id="cur-r"></div>
+
+<!-- ═══ AMBIENT ORBS ═══ -->
+<div class="orb" style="width:700px;height:700px;background:rgba(138,80,255,.1);left:-280px;top:-180px;animation-duration:18s;"></div>
+<div class="orb" style="width:550px;height:550px;background:rgba(0,255,204,.07);right:-180px;top:36%;animation-duration:23s;animation-delay:-8s;"></div>
+<div class="orb" style="width:450px;height:450px;background:rgba(255,45,120,.07);left:22%;bottom:-130px;animation-duration:21s;animation-delay:-12s;"></div>
+<div class="orb" style="width:320px;height:320px;background:rgba(255,204,0,.05);right:8%;top:12%;animation-duration:16s;animation-delay:-5s;"></div>
+
+<canvas id="c3d"></canvas>
+
+<!-- ═══ NAV ═══ -->
+<nav id="nav">
+  <a href="#" class="logo"><span class="logo-dot"></span>HRISHIKESH</a>
+  <ul class="nav-links">
+    <li><a href="#about">about</a></li>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#journey">journey</a></li>
+    <li><a href="#stack">stack</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <!-- parallax floating shapes -->
+  <div class="para-layer" id="para1">
+    <svg class="hero-shape" style="left:65%;top:20%;width:120px;opacity:0;" viewBox="0 0 120 120">
+      <polygon points="60,5 115,90 5,90" fill="none" stroke="rgba(138,80,255,.35)" stroke-width="1.5"/>
+    </svg>
+    <svg class="hero-shape" style="left:75%;top:55%;width:70px;opacity:0;animation-delay:1.8s;" viewBox="0 0 70 70">
+      <rect x="5" y="5" width="60" height="60" fill="none" stroke="rgba(0,255,204,.3)" stroke-width="1.5" transform="rotate(20,35,35)"/>
+    </svg>
+    <svg class="hero-shape" style="left:10%;top:70%;width:90px;opacity:0;animation-delay:2s;" viewBox="0 0 90 90">
+      <circle cx="45" cy="45" r="40" fill="none" stroke="rgba(255,45,120,.25)" stroke-width="1.5" stroke-dasharray="8 4"/>
+    </svg>
+    <svg class="hero-shape" style="left:55%;top:75%;width:55px;opacity:0;animation-delay:2.2s;" viewBox="0 0 55 55">
+      <polygon points="27,3 52,48 2,48" fill="none" stroke="rgba(255,204,0,.3)" stroke-width="1.5"/>
+    </svg>
+  </div>
+
+  <div class="hero-eye">ASPIRING AI &amp; ML ENGINEER</div>
+
+  <!-- HRISHIKESH letter-by-letter -->
+  <div class="hero-name" id="heroName"></div>
+
+  <p class="hero-role">Building <em>intelligent systems</em> that matter</p>
+  <p class="hero-desc">Computer Science student passionate about AI, Machine Learning, and impactful web applications. I turn data into decisions and ideas into deployed products.</p>
+
+  <div class="hero-ctas">
+    <a href="#projects" class="btn-p mag">View Projects ↗</a>
+    <a href="https://github.com/hrishikesh-arch" target="_blank" class="btn-o mag">GitHub ↗</a>
+  </div>
+
+  <div class="scroll-hint"><div class="scroll-bar"></div>SCROLL TO EXPLORE</div>
+
+  <!-- ═══ 3D AVATAR ═══ -->
+  <div id="avatar-wrap">
+    <div class="avatar-ring">
+      <div class="orb-dot" id="od1" style="background:var(--v1);"></div>
+      <div class="orb-dot" id="od2" style="background:var(--v2);"></div>
+      <div class="orb-dot" id="od3" style="background:var(--v3);"></div>
+    </div>
+    <canvas id="avatar-canvas"></canvas>
+    <div class="av-scan"></div>
+    <div class="av-status"><div class="av-status-dot"></div>AVAILABLE FOR WORK</div>
+    <div class="avatar-nameplate">
+      <span class="avname">HRISHIKESH</span>
+      <span class="avtitle">AI &amp; ML Engineer</span>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="sc a"><div class="sc-num">4+</div><div class="sc-lbl">Projects Built</div></div>
+    <div class="sc b"><div class="sc-num">AI/ML</div><div class="sc-lbl">Focused</div></div>
+    <div class="sc c"><div class="sc-num">∞</div><div class="sc-lbl">Curiosity</div></div>
+    <div class="sc d"><div class="sc-num">2025</div><div class="sc-lbl">Journey Start</div></div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT ═══ -->
+<section id="about">
+  <div class="sec-lbl rv up">ABOUT ME</div>
+  <h2 class="sec-title rv up">Who I <span class="grad">Am</span></h2>
+  <div class="ag">
+    <div class="at rv left">
+      <p>I'm <strong>Hrishikesh</strong> — a CS student with a deep fascination for <span class="hl">Artificial Intelligence & Machine Learning.</span></p>
+      <p>My journey began in <strong>2025</strong>, and in that time I've shipped real-world applications blending <strong>ML models</strong> with full-stack development — from disaster-relief platforms to environmental analyzers.</p>
+      <p>My mission: <em>make intelligent systems that solve real human problems.</em></p>
+    </div>
+    <div class="rv right">
+      <div class="cube-scene">
+        <div class="cube">
+          <div class="cf cf-f">Python / ML</div>
+          <div class="cf cf-b">Deep Learning</div>
+          <div class="cf cf-l">React / JS</div>
+          <div class="cf cf-r">Data Science</div>
+          <div class="cf cf-t">NLP / CV</div>
+          <div class="cf cf-bo">Full Stack</div>
+        </div>
+      </div>
+      <div class="skills-cloud">
+        <span class="stag h1"><span>Python</span></span>
+        <span class="stag h1"><span>Machine Learning</span></span>
+        <span class="stag h1"><span>Deep Learning</span></span>
+        <span class="stag h2"><span>TensorFlow</span></span>
+        <span class="stag h2"><span>PyTorch</span></span>
+        <span class="stag h3"><span>NLP</span></span>
+        <span class="stag h3"><span>Computer Vision</span></span>
+        <span class="stag"><span>Scikit-learn</span></span>
+        <span class="stag"><span>Pandas / NumPy</span></span>
+        <span class="stag h2"><span>React.js</span></span>
+        <span class="stag"><span>JavaScript</span></span>
+        <span class="stag"><span>Data Visualization</span></span>
+        <span class="stag"><span>REST APIs</span></span>
+        <span class="stag"><span>Git</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROJECTS ═══ -->
+<section id="projects">
+  <div class="sec-lbl rv up">WORK</div>
+  <h2 class="sec-title rv up"><span class="grad">Projects</span></h2>
+  <div class="pgrid">
+
+    <a href="https://rakshasethu.netlify.app/" target="_blank" class="pc feat rv scale">
+      <div>
+        <div class="pnum">01 — FEATURED</div>
+        <span class="ptag t-hlth">DISASTER RELIEF</span><span class="ptag t-ai">AI-POWERED</span>
+        <h3 class="ptitle">RakshaSetu</h3>
+        <p class="pdesc">Full-stack disaster relief & coordination platform connecting volunteers, victims, and organizations in real-time. Features intelligent resource tracking and need-matching algorithms.</p>
+        <div class="ptech">
+          <span class="techp">React</span><span class="techp">Node.js</span><span class="techp">Real-time DB</span><span class="techp">Maps API</span><span class="techp">Netlify</span>
+        </div>
+      </div>
+      <div class="pvis pv1">
+        <div class="pv-grid"></div>
+        <div class="pv-blob" style="width:130px;height:130px;background:rgba(255,45,120,.3);left:8%;top:8%;"></div>
+        <div class="pv-blob" style="width:90px;height:90px;background:rgba(138,80,255,.35);right:12%;bottom:12%;animation-delay:-2s;"></div>
+        <div class="pv-icon">🛡️</div>
+      </div>
+      <span class="plink">↗</span>
+    </a>
+
+    <a href="https://debuggerlyricwwsfinnder.netlify.app/" target="_blank" class="pc rv up">
+      <div class="pnum">02</div>
+      <span class="ptag t-web">WEB APP</span>
+      <h3 class="ptitle">Lyrics Finder</h3>
+      <p class="pdesc">Instant song lyrics search with a clean, music-focused UI. Real-time API fetching with a smooth, responsive experience.</p>
+      <div class="pvis pv2">
+        <div class="pv-grid"></div>
+        <div class="pv-blob" style="width:90px;height:90px;background:rgba(0,255,204,.28);left:18%;top:0%;"></div>
+        <div class="pv-icon" style="font-size:42px;">🎵</div>
+      </div>
+      <div class="ptech" style="margin-top:16px;"><span class="techp">JavaScript</span><span class="techp">Lyrics API</span><span class="techp">Netlify</span></div>
+      <span class="plink">↗</span>
+    </a>
+
+    <a href="https://hrishikesh-arch.github.io/Water-quality-analyer/" target="_blank" class="pc rv up">
+      <div class="pnum">03</div>
+      <span class="ptag t-env">ENVIRONMENT</span><span class="ptag t-ai">ML MODEL</span>
+      <h3 class="ptitle">Water Quality Analyzer</h3>
+      <p class="pdesc">ML-powered water potability predictor using classification algorithms on real environmental datasets. AI solving real-world problems.</p>
+      <div class="pvis pv3">
+        <div class="pv-grid"></div>
+        <div class="pv-blob" style="width:100px;height:100px;background:rgba(0,200,255,.28);right:12%;top:0%;animation-delay:-1s;"></div>
+        <div class="pv-icon" style="font-size:42px;">💧</div>
+      </div>
+      <div class="ptech" style="margin-top:16px;"><span class="techp">Python</span><span class="techp">ML Classification</span><span class="techp">Data Analysis</span></div>
+      <span class="plink">↗</span>
+    </a>
+
+    <a href="https://extraordinary-babka-3dc24f.netlify.app/" target="_blank" class="pc rv up">
+      <div class="pnum">04</div>
+      <span class="ptag t-ai">AI/ML</span>
+      <h3 class="ptitle">AI Experiment</h3>
+      <p class="pdesc">Intelligent web application showcasing ML model integration and AI-powered features with modern cloud infrastructure.</p>
+      <div class="pvis pv4">
+        <div class="pv-grid"></div>
+        <div class="pv-blob" style="width:80px;height:80px;background:rgba(138,80,255,.32);left:20%;top:10%;animation-delay:-3s;"></div>
+        <div class="pv-icon" style="font-size:42px;">🤖</div>
+      </div>
+      <div class="ptech" style="margin-top:16px;"><span class="techp">AI Integration</span><span class="techp">React</span><span class="techp">Netlify</span></div>
+      <span class="plink">↗</span>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ JOURNEY ═══ -->
+<section id="journey">
+  <div class="sec-lbl rv up">TIMELINE</div>
+  <h2 class="sec-title rv up">My <span class="grad">Journey</span></h2>
+  <div class="yr-badge rv scale">
+    <span>2025</span><span class="yr-arrow">→</span><span>Present</span>
+  </div>
+  <div class="tl">
+    <div class="tli rv left">
+      <div class="tli-dot"></div>
+      <div class="tli-date">2025 — PRESENT</div>
+      <div class="tli-title">Advancing in AI & Machine Learning</div>
+      <div class="tli-sub">Deep Learning · NLP · Computer Vision</div>
+      <div class="tli-desc">Exploring neural architectures, natural language processing, and computer vision. Building ML-powered projects while deepening mathematical foundations in linear algebra and statistics.</div>
+    </div>
+    <div class="tli rv left">
+      <div class="tli-dot"></div>
+      <div class="tli-date">2025</div>
+      <div class="tli-title">RakshaSetu — Disaster Relief Platform</div>
+      <div class="tli-sub">Full-Stack · React · Node.js · Netlify</div>
+      <div class="tli-desc">Built an end-to-end disaster coordination platform connecting communities with relief organizations in real-time. Most impactful project to date.</div>
+    </div>
+    <div class="tli rv left">
+      <div class="tli-dot"></div>
+      <div class="tli-date">2025</div>
+      <div class="tli-title">Water Quality ML Analyzer</div>
+      <div class="tli-sub">Machine Learning · Python · Data Science</div>
+      <div class="tli-desc">First deep-dive into applied ML — trained classification models on real environmental datasets to predict water potability and safety.</div>
+    </div>
+    <div class="tli rv left">
+      <div class="tli-dot"></div>
+      <div class="tli-date">2025 — THE BEGINNING</div>
+      <div class="tli-title">The Journey Begins</div>
+      <div class="tli-sub">Computer Science · Python · Web Development</div>
+      <div class="tli-desc">Started coding seriously in 2025 — Python, JavaScript, web dev. Immediately drawn to the intersection of AI and real-world impact. No looking back.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STACK ═══ -->
+<section id="stack">
+  <div class="sec-lbl rv up">TECHNOLOGIES</div>
+  <h2 class="sec-title rv up">Tech <span class="grad">Stack</span></h2>
+  <div class="sgrid">
+    <div class="si rv scale"><span class="si-icon">🐍</span><div class="si-name">Python</div><div class="si-cat">Primary</div></div>
+    <div class="si rv scale"><span class="si-icon">🧠</span><div class="si-name">TensorFlow</div><div class="si-cat">Deep Learning</div></div>
+    <div class="si rv scale"><span class="si-icon">🔥</span><div class="si-name">PyTorch</div><div class="si-cat">Neural Nets</div></div>
+    <div class="si rv scale"><span class="si-icon">📊</span><div class="si-name">Scikit-learn</div><div class="si-cat">ML Library</div></div>
+    <div class="si rv scale"><span class="si-icon">⚛️</span><div class="si-name">React.js</div><div class="si-cat">Frontend</div></div>
+    <div class="si rv scale"><span class="si-icon">🌐</span><div class="si-name">JavaScript</div><div class="si-cat">Web</div></div>
+    <div class="si rv scale"><span class="si-icon">🐼</span><div class="si-name">Pandas</div><div class="si-cat">Data</div></div>
+    <div class="si rv scale"><span class="si-icon">🔢</span><div class="si-name">NumPy</div><div class="si-cat">Computing</div></div>
+    <div class="si rv scale"><span class="si-icon">💬</span><div class="si-name">NLP</div><div class="si-cat">Language AI</div></div>
+    <div class="si rv scale"><span class="si-icon">👁️</span><div class="si-name">Computer Vision</div><div class="si-cat">Image AI</div></div>
+    <div class="si rv scale"><span class="si-icon">☁️</span><div class="si-name">Netlify</div><div class="si-cat">Deploy</div></div>
+    <div class="si rv scale"><span class="si-icon">🗂️</span><div class="si-name">Git</div><div class="si-cat">Version Control</div></div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section id="contact">
+  <div class="sec-lbl rv up" style="justify-content:center;">GET IN TOUCH</div>
+  <h2 class="ctbig rv up">Let's<br><span class="outline">Build</span><br><span class="lit">Together</span></h2>
+  <p class="ct-sub rv up">Open to collaborations, internships &amp; projects</p>
+  <!-- Direct contact -->
+  <div class="ct-direct rv up">
+    <a href="mailto:hrishikeshpnair2007@gmail.com" class="ct-info">
+      <span class="ct-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span>
+      <span>hrishikeshpnair2007@gmail.com</span>
+    </a>
+    <a href="tel:+918075898769" class="ct-info">
+      <span class="ct-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.19h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+      <span>+91 8075 898 769</span>
+    </a>
+  </div>
+  <div class="slinks rv up">
+    <a href="https://github.com/hrishikesh-arch" target="_blank" class="sbtn">
+      <span><svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg> GitHub</span>
+    </a>
+    <a href="https://rakshasethu.netlify.app/" target="_blank" class="sbtn"><span>🛡️ RakshaSetu</span></a>
+    <a href="https://hrishikesh-arch.github.io/Water-quality-analyer/" target="_blank" class="sbtn"><span>💧 Water Analyzer</span></a>
+    <a href="https://debuggerlyricwwsfinnder.netlify.app/" target="_blank" class="sbtn"><span>🎵 Lyrics Finder</span></a>
+    <a href="https://extraordinary-babka-3dc24f.netlify.app/" target="_blank" class="sbtn"><span>🤖 AI Experiment</span></a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Hrishikesh</span>
+  <span class="gr">AI & ML Engineer</span>
+  <span>Built with passion ✦</span>
+</footer>
+
+<script>
+/* ══════════════════════════════════
+   LOADER
+══════════════════════════════════ */
+const NAME='HRISHIKESH';
+const ldName=document.getElementById('ld-name');
+const ldBar=document.getElementById('ld-bar');
+const ldPct=document.getElementById('ld-pct');
+const ldStatus=document.getElementById('ld-status');
+const loader=document.getElementById('loader');
+
+// Render letters
+NAME.split('').forEach((ch,i)=>{
+  const s=document.createElement('span');
+  s.className='ld-char';
+  s.textContent=ch;
+  s.style.animationDelay=(i*0.07)+'s';
+  ldName.appendChild(s);
+});
+
+// Status messages
+const STATUSES=['INITIALIZING...','LOADING ASSETS...','BOOTING ML ENGINE...','COMPILING SHADERS...','ALMOST READY...'];
+let statusIdx=0;
+
+// Animate progress bar
+let pct=0;
+const pctInterval=setInterval(()=>{
+  pct=Math.min(100,pct+Math.random()*4+1);
+  ldBar.style.width=pct+'%';
+  ldPct.textContent=Math.floor(pct)+'%';
+  // update status at milestones
+  const newIdx=Math.min(STATUSES.length-1,Math.floor(pct/22));
+  if(newIdx!==statusIdx){statusIdx=newIdx;ldStatus.textContent=STATUSES[statusIdx];}
+  if(pct>=100){
+    ldStatus.textContent='READY ✦';
+    clearInterval(pctInterval);
+    setTimeout(()=>{
+      loader.classList.add('out');
+      setTimeout(()=>loader.style.display='none',700);
+    },400);
+  }
+},40);
+
+/* ══════════════════════════════════
+   HERO NAME — letter-by-letter 3D drop
+══════════════════════════════════ */
+const heroName=document.getElementById('heroName');
+const letters=[
+  {ch:'H',cls:'solid'},{ch:'R',cls:'solid'},{ch:'I',cls:'solid'},
+  {ch:'S',cls:'solid'},{ch:'H',cls:'solid'},{ch:'I',cls:'solid'},
+  {ch:'K',cls:'outline'},{ch:'E',cls:'outline'},{ch:'S',cls:'outline'},
+  {ch:'H',cls:'outline'}
+];
+letters.forEach((l,i)=>{
+  const span=document.createElement('span');
+  span.className='nl '+l.cls;
+  span.textContent=l.ch;
+  span.style.animationDelay=(1.0+i*0.07)+'s';
+  heroName.appendChild(span);
+});
+
+/* ══════════════════════════════════
+   CURSOR + TRAIL
+══════════════════════════════════ */
+const cur=document.getElementById('cur');
+const curR=document.getElementById('cur-r');
+let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+const TRAIL_COLORS=['#8a50ff','#a060ff','#c060ff','#00ffcc','#ff2d78'];
+const trails=[];
+const TRAIL_LEN=8;
+
+for(let i=0;i<TRAIL_LEN;i++){
+  const d=document.createElement('div');
+  d.className='cur-trail';
+  d.style.background=TRAIL_COLORS[i%TRAIL_COLORS.length];
+  d.style.opacity=(1-i/TRAIL_LEN)*0.5;
+  d.style.width=(5-i*0.4)+'px';
+  d.style.height=(5-i*0.4)+'px';
+  document.body.appendChild(d);
+  trails.push({el:d,x:mx,y:my});
+}
+
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+
+(function animCursor(){
+  rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+  curR.style.left=rx+'px';curR.style.top=ry+'px';
+
+  let px=mx,py=my;
+  trails.forEach((t,i)=>{
+    t.x+=(px-t.x)*(0.35-i*0.03);
+    t.y+=(py-t.y)*(0.35-i*0.03);
+    t.el.style.left=t.x+'px';t.el.style.top=t.y+'px';
+    px=t.x;py=t.y;
+  });
+  requestAnimationFrame(animCursor);
+})();
+
+document.querySelectorAll('a,button,.pc,.si,.sc,.sbtn,.stag').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    cur.style.width='14px';cur.style.height='14px';cur.style.background='var(--v2)';
+    curR.style.width='60px';curR.style.height='60px';curR.style.borderColor='rgba(0,255,204,.7)';
+  });
+  el.addEventListener('mouseleave',()=>{
+    cur.style.width='8px';cur.style.height='8px';cur.style.background='var(--v1)';
+    curR.style.width='36px';curR.style.height='36px';curR.style.borderColor='rgba(138,80,255,.5)';
+  });
+});
+
+/* ══════════════════════════════════
+   SCROLL PROGRESS
+══════════════════════════════════ */
+const prog=document.getElementById('prog');
+window.addEventListener('scroll',()=>{
+  const h=document.body.scrollHeight-innerHeight;
+  prog.style.width=(scrollY/h*100)+'%';
+},{ passive:true });
+
+/* ══════════════════════════════════
+   NAV SHRINK + ACTIVE LINK
+══════════════════════════════════ */
+const nav=document.getElementById('nav');
+const navLinks=document.querySelectorAll('.nav-links a');
+const sections=document.querySelectorAll('section[id]');
+
+window.addEventListener('scroll',()=>{
+  nav.classList.toggle('scrolled',scrollY>60);
+  let cur2='';
+  sections.forEach(s=>{
+    if(scrollY>=s.offsetTop-120)cur2=s.id;
+  });
+  navLinks.forEach(a=>{
+    a.classList.toggle('active',a.getAttribute('href')==='#'+cur2);
+  });
+},{passive:true});
+
+/* ══════════════════════════════════
+   3D CANVAS
+══════════════════════════════════ */
+const canvas=document.getElementById('c3d'),ctx=canvas.getContext('2d');
+let W,H;
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;}
+resize();window.addEventListener('resize',resize,{passive:true});
+
+const FOV=520;
+let pmx=W/2,pmy=H/2;
+document.addEventListener('mousemove',e=>{pmx=e.clientX;pmy=e.clientY;},{passive:true});
+
+function proj(x,y,z){
+  const s=FOV/(FOV+z);
+  const cx=W/2+(pmx-W/2)*.04,cy=H/2+(pmy-H/2)*.04;
+  return{sx:cx+x*s,sy:cy+y*s,s};
+}
+
+const STARS=Array.from({length:130},()=>({
+  x:(Math.random()-.5)*W*2.5,y:(Math.random()-.5)*H*2.5,
+  z:Math.random()*2200,vz:Math.random()*1.4+.3,
+  col:['#8a50ff','#00ffcc','#ff2d78','#ffcc00','#00c8ff','#ff7730'][~~(Math.random()*6)]
+}));
+
+const SHAPES=Array.from({length:22},()=>({
+  x:(Math.random()-.5)*W*2,y:(Math.random()-.5)*H*2,
+  z:Math.random()*1900+200,vz:Math.random()*.7+.15,
+  vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,
+  rot:0,vrot:(Math.random()-.5)*.025,
+  sz:Math.random()*22+7,
+  col:['rgba(138,80,255,','rgba(0,255,204,','rgba(255,45,120,','rgba(255,204,0,','rgba(0,200,255,','rgba(255,119,48,'][~~(Math.random()*6)],
+  type:~~(Math.random()*4)
+}));
+
+const RINGS=Array.from({length:6},()=>({
+  x:(Math.random()-.5)*W,y:(Math.random()-.5)*H,
+  z:Math.random()*1600+400,vz:.4,r:Math.random()*40+15,
+  rot:0,vrot:.014,tilt:Math.random()*Math.PI,
+  col:['rgba(138,80,255,','rgba(0,255,204,','rgba(255,45,120,'][~~(Math.random()*3)]
+}));
+
+function drawPoly(cx,cy,n,r,rot){
+  ctx.beginPath();
+  for(let i=0;i<n;i++){
+    const a=(Math.PI*2/n)*i+rot;
+    i?ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+  }
+  ctx.closePath();
+}
+
+let frame=0;
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  frame++;
+
+  // Grid
+  ctx.lineWidth=.5;
+  const vanX=W/2,vanY=H*.62;
+  for(let i=-10;i<=10;i++){
+    ctx.strokeStyle=`rgba(138,80,255,${.03+Math.abs(i)*.001})`;
+    ctx.beginPath();ctx.moveTo(vanX,vanY);ctx.lineTo(vanX+i*55,H+200);ctx.stroke();
+  }
+  for(let j=0;j<7;j++){
+    const t=j/6,yy=vanY+(H+200-vanY)*t,hw=(yy-vanY)*1.7;
+    ctx.strokeStyle=`rgba(138,80,255,${.05*(1-t)})`;
+    ctx.beginPath();ctx.moveTo(vanX-hw,yy);ctx.lineTo(vanX+hw,yy);ctx.stroke();
+  }
+
+  // Rings
+  RINGS.sort((a,b)=>b.z-a.z);
+  RINGS.forEach(rg=>{
+    rg.z-=rg.vz;rg.rot+=rg.vrot;
+    if(rg.z<=10)rg.z=1800;
+    const{sx,sy,s}=proj(rg.x,rg.y,rg.z);
+    if(sx<-200||sx>W+200||sy<-200||sy>H+200)return;
+    const alpha=Math.min(.45,s*.7);
+    const rx2=rg.r*s,ry2=rg.r*s*Math.abs(Math.sin(rg.tilt+frame*.008));
+    ctx.save();ctx.translate(sx,sy);ctx.rotate(rg.rot);
+    ctx.beginPath();ctx.ellipse(0,0,rx2,ry2,0,0,Math.PI*2);
+    ctx.strokeStyle=rg.col+alpha+')';ctx.lineWidth=Math.max(.3,s*1.5);ctx.stroke();
+    ctx.restore();
+  });
+
+  // Shapes
+  SHAPES.sort((a,b)=>b.z-a.z);
+  SHAPES.forEach(g=>{
+    g.z-=g.vz;g.x+=g.vx;g.y+=g.vy;g.rot+=g.vrot;
+    if(g.z<=10)g.z=1900;
+    const{sx,sy,s}=proj(g.x,g.y,g.z);
+    if(sx<-100||sx>W+100||sy<-100||sy>H+100)return;
+    const r=g.sz*s,alpha=Math.min(.5,s*.75);
+    ctx.save();ctx.translate(sx,sy);ctx.rotate(g.rot);
+    ctx.strokeStyle=g.col+alpha+')';ctx.fillStyle=g.col+(alpha*.15)+')';
+    ctx.lineWidth=Math.max(.3,s*1.5);
+    if(g.type===0)drawPoly(0,0,3,r,0);
+    else if(g.type===1){ctx.beginPath();ctx.rect(-r,-r,r*2,r*2);}
+    else if(g.type===2)drawPoly(0,0,6,r,0);
+    else{ctx.beginPath();ctx.moveTo(0,-r);ctx.lineTo(r*.6,0);ctx.lineTo(0,r);ctx.lineTo(-r*.6,0);ctx.closePath();}
+    ctx.fill();ctx.stroke();ctx.restore();
+  });
+
+  // Stars
+  STARS.forEach(s=>{
+    s.z-=s.vz;
+    if(s.z<=0){s.z=2200;s.x=(Math.random()-.5)*W*2.5;s.y=(Math.random()-.5)*H*2.5;}
+    const p=proj(s.x,s.y,s.z);
+    if(p.sx<0||p.sx>W||p.sy<0||p.sy>H)return;
+    const r=Math.max(.4,2.2*p.s),alpha=Math.min(.95,p.s*2);
+    ctx.beginPath();ctx.arc(p.sx,p.sy,r,0,Math.PI*2);
+    ctx.fillStyle=s.col+(~~(alpha*255)).toString(16).padStart(2,'0');
+    ctx.fill();
+  });
+
+  // Connections
+  ctx.lineWidth=.3;
+  for(let i=0;i<STARS.length;i++){
+    const pi=proj(STARS[i].x,STARS[i].y,STARS[i].z);
+    for(let j=i+1;j<STARS.length;j++){
+      const pj=proj(STARS[j].x,STARS[j].y,STARS[j].z);
+      const d=Math.hypot(pi.sx-pj.sx,pi.sy-pj.sy);
+      if(d<65){ctx.strokeStyle=`rgba(138,80,255,${(1-d/65)*.1})`;ctx.beginPath();ctx.moveTo(pi.sx,pi.sy);ctx.lineTo(pj.sx,pj.sy);ctx.stroke();}
+    }
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* ══════════════════════════════════
+   SCROLL REVEAL — 5 entrance types
+══════════════════════════════════ */
+const rvObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const delay=+e.target.dataset.delay||0;
+      setTimeout(()=>e.target.classList.add('visible'),delay);
+    }
+  });
+},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+
+document.querySelectorAll('.rv').forEach((el,i)=>{
+  el.dataset.delay=(i%6)*80;
+  rvObs.observe(el);
+});
+
+/* ══════════════════════════════════
+   PARALLAX — hero shapes + orbs
+══════════════════════════════════ */
+const para1=document.getElementById('para1');
+const orbs=document.querySelectorAll('.orb');
+
+window.addEventListener('scroll',()=>{
+  const sy=scrollY;
+  if(para1)para1.style.transform=`translateY(${sy*.18}px)`;
+  orbs.forEach((o,i)=>{
+    const factor=.06+i*.03;
+    o.style.transform=`translateY(${sy*factor}px)`;
+  });
+},{passive:true});
+
+// Mouse parallax on hero shapes
+document.addEventListener('mousemove',e=>{
+  const px=(e.clientX/innerWidth-.5)*30;
+  const py=(e.clientY/innerHeight-.5)*20;
+  if(para1)para1.style.transform=`translate(${px*.4}px,${py*.4}px)`;
+});
+
+/* ══════════════════════════════════
+   3D TILT — stat cards
+══════════════════════════════════ */
+document.querySelectorAll('.sc').forEach(c=>{
+  c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect(),x=(e.clientX-r.left-r.width/2)/r.width,y=(e.clientY-r.top-r.height/2)/r.height;
+    c.style.transform=`perspective(500px) rotateX(${-y*16}deg) rotateY(${x*16}deg) translateX(-8px) translateY(-5px) scale(1.05)`;
+  });
+  c.addEventListener('mouseleave',()=>c.style.transform='');
+});
+
+/* ══════════════════════════════════
+   3D TILT — project cards
+══════════════════════════════════ */
+document.querySelectorAll('.pc').forEach(c=>{
+  c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect();
+    c.style.setProperty('--mx',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');
+    c.style.setProperty('--my',((e.clientY-r.top)/r.height*100).toFixed(1)+'%');
+  });
+});
+
+/* ══════════════════════════════════
+   3D TILT — stack items
+══════════════════════════════════ */
+document.querySelectorAll('.si').forEach(s=>{
+  s.addEventListener('mousemove',e=>{
+    const r=s.getBoundingClientRect(),x=(e.clientX-r.left-r.width/2)/r.width,y=(e.clientY-r.top-r.height/2)/r.height;
+    s.style.transform=`perspective(400px) rotateX(${-y*14}deg) rotateY(${x*14}deg) translateY(-8px)`;
+  });
+  s.addEventListener('mouseleave',()=>s.style.transform='');
+});
+
+/* ══════════════════════════════════
+   MAGNETIC BUTTONS
+══════════════════════════════════ */
+document.querySelectorAll('.mag').forEach(btn=>{
+  btn.addEventListener('mousemove',e=>{
+    const r=btn.getBoundingClientRect(),x=(e.clientX-r.left-r.width/2)*.25,y=(e.clientY-r.top-r.height/2)*.25;
+    btn.style.transform=`translate(${x}px,${y}px)`;
+  });
+  btn.addEventListener('mouseleave',()=>btn.style.transform='');
+});
+
+/* ══════════════════════════════════
+   RIPPLE on buttons
+══════════════════════════════════ */
+document.querySelectorAll('.btn-p,.btn-o,.sbtn').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    const r=btn.getBoundingClientRect(),size=Math.max(r.width,r.height);
+    const rp=document.createElement('span');
+    rp.className='ripple';
+    rp.style.cssText=`width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px;`;
+    btn.appendChild(rp);
+    setTimeout(()=>rp.remove(),600);
+  });
+});
+
+/* ══════════════════════════════════
+   MICRO: skill tag stagger on hover area
+══════════════════════════════════ */
+const cloud=document.querySelector('.skills-cloud');
+if(cloud){
+  cloud.addEventListener('mouseenter',()=>{
+    cloud.querySelectorAll('.stag').forEach((t,i)=>{
+      t.style.transitionDelay=(i*20)+'ms';
+    });
+  });
+  cloud.addEventListener('mouseleave',()=>{
+    cloud.querySelectorAll('.stag').forEach(t=>t.style.transitionDelay='0ms');
+  });
+}
+
+/* ══════════════════════════════════
+   ORBIT DOTS — CSS animation around ring
+══════════════════════════════════ */
+(function animOrbDots(){
+  const t=Date.now()/1000;
+  const dots=[
+    {el:document.getElementById('od1'),speed:0.5,r:168,phase:0},
+    {el:document.getElementById('od2'),speed:0.32,r:168,phase:2.1},
+    {el:document.getElementById('od3'),speed:0.4,r:168,phase:4.2},
+  ];
+  dots.forEach(d=>{
+    if(!d.el)return;
+    const angle=t*d.speed+d.phase;
+    const cx=d.r*Math.cos(angle);
+    const cy=d.r*Math.sin(angle);
+    d.el.style.transform=`translate(${cx}px,${cy}px)`;
+  });
+  requestAnimationFrame(animOrbDots);
+})();
+</script>
+
+<!-- THREE.JS 3D AVATAR -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  const wrap=document.getElementById('avatar-wrap');
+  const acanvas=document.getElementById('avatar-canvas');
+  if(!wrap||!acanvas)return;
+
+  /* ── SCENE SETUP ── */
+  const renderer=new THREE.WebGLRenderer({canvas:acanvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+
+  function setSize(){
+    const W=wrap.clientWidth,H=wrap.clientHeight-60;
+    renderer.setSize(W,H);
+    camera.aspect=W/H;camera.updateProjectionMatrix();
+  }
+
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(42,1,0.1,100);
+  camera.position.set(0,0.4,4.8);
+
+  setSize();
+  window.addEventListener('resize',setSize,{passive:true});
+
+  /* ── LIGHTS ── */
+  const ambient=new THREE.AmbientLight(0x8a50ff,0.4);
+  scene.add(ambient);
+
+  const key=new THREE.DirectionalLight(0xffffff,1.2);
+  key.position.set(2,4,3);
+  key.castShadow=true;
+  scene.add(key);
+
+  const fill=new THREE.PointLight(0x00ffcc,1.8,12);
+  fill.position.set(-2,1,2);
+  scene.add(fill);
+
+  const rim=new THREE.PointLight(0xff2d78,1.4,10);
+  rim.position.set(2,-1,-2);
+  scene.add(rim);
+
+  const top=new THREE.PointLight(0x8a50ff,2,8);
+  top.position.set(0,4,0);
+  scene.add(top);
+
+  /* ── MATERIALS ── */
+  const skinMat=new THREE.MeshStandardMaterial({color:0xc8a882,roughness:0.55,metalness:0.05});
+  const darkMat=new THREE.MeshStandardMaterial({color:0x1a0a3a,roughness:0.4,metalness:0.3});
+  const shirtMat=new THREE.MeshStandardMaterial({
+    color:0x8a50ff,roughness:0.3,metalness:0.5,
+    emissive:new THREE.Color(0x3a1a88),emissiveIntensity:0.4
+  });
+  const hairMat=new THREE.MeshStandardMaterial({color:0x1a0805,roughness:0.8,metalness:0.0});
+  const glassMat=new THREE.MeshStandardMaterial({
+    color:0x00ffcc,roughness:0.05,metalness:0.95,
+    transparent:true,opacity:0.25,
+    emissive:new THREE.Color(0x00ffcc),emissiveIntensity:0.3
+  });
+  const eyeMat=new THREE.MeshStandardMaterial({
+    color:0x00c8ff,roughness:0.1,metalness:0.8,
+    emissive:new THREE.Color(0x0088cc),emissiveIntensity:0.6
+  });
+  const pupilMat=new THREE.MeshStandardMaterial({color:0x050515,roughness:0.9});
+  const holoBadgeMat=new THREE.MeshStandardMaterial({
+    color:0x00ffcc,roughness:0.1,metalness:0.9,
+    transparent:true,opacity:0.7,
+    emissive:new THREE.Color(0x00ffcc),emissiveIntensity:0.8
+  });
+
+  const avatar=new THREE.Group();
+  scene.add(avatar);
+
+  /* ── HELPERS ── */
+  function box(w,h,d,mat,x=0,y=0,z=0,rx=0,ry=0,rz=0){
+    const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d,2,2,2),mat);
+    m.position.set(x,y,z);m.rotation.set(rx,ry,rz);
+    m.castShadow=true;m.receiveShadow=true;
+    return m;
+  }
+  function sphere(r,mat,x=0,y=0,z=0,ws=24,hs=24){
+    const m=new THREE.Mesh(new THREE.SphereGeometry(r,ws,hs),mat);
+    m.position.set(x,y,z);m.castShadow=true;
+    return m;
+  }
+  function cyl(rt,rb,h,mat,x=0,y=0,z=0,rx=0){
+    const m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,20),mat);
+    m.position.set(x,y,z);m.rotation.x=rx;m.castShadow=true;
+    return m;
+  }
+
+  /* ── HEAD ── */
+  const head=new THREE.Group();
+  // skull
+  const skull=sphere(0.52,skinMat,0,0,0,28,28);
+  skull.scale.set(1,1.08,0.92);
+  head.add(skull);
+  // jaw
+  const jaw=box(0.86,0.36,0.82,skinMat,0,-0.38,0.02,0.08,0,0);
+  head.add(jaw);
+  // forehead slight brow ridge
+  const brow=box(0.7,0.06,0.2,skinMat,0,0.22,0.44,-0.15,0,0);
+  head.add(brow);
+
+  // EYES
+  [-0.18,0.18].forEach((x,i)=>{
+    const eyeG=new THREE.Group();
+    // whites
+    const eyeWhite=sphere(0.098,new THREE.MeshStandardMaterial({color:0xf0f0f0,roughness:0.5}),x,0.06,0.44);
+    // iris
+    const iris=sphere(0.076,eyeMat,x,0.06,0.476);
+    // pupil
+    const pupil=sphere(0.042,pupilMat,x,0.06,0.49);
+    // highlight
+    const hl=sphere(0.018,new THREE.MeshStandardMaterial({color:0xffffff,emissive:new THREE.Color(0xffffff),emissiveIntensity:1}),x+0.02,0.08,0.49);
+    head.add(eyeWhite,iris,pupil,hl);
+  });
+
+  // EYEBROWS
+  [-0.18,0.18].forEach(x=>{
+    const eb=box(0.14,0.022,0.04,hairMat,x,0.185,0.46,-0.2,0,x>0?-0.15:0.15);
+    head.add(eb);
+  });
+
+  // NOSE
+  const nose=box(0.068,0.11,0.1,skinMat,0,-0.055,0.5,-0.12,0,0);
+  head.add(nose);
+  const noseTip=sphere(0.048,skinMat,0,-0.1,0.52);
+  head.add(noseTip);
+  [-0.065,0.065].forEach(x=>{
+    head.add(sphere(0.032,skinMat,x,-0.12,0.5));
+  });
+
+  // LIPS / MOUTH
+  const lipU=box(0.22,0.042,0.05,new THREE.MeshStandardMaterial({color:0xb87060,roughness:0.5}),-0,-0.22,0.47,-0.1,0,0);
+  const lipL=box(0.2,0.052,0.05,new THREE.MeshStandardMaterial({color:0xb87060,roughness:0.5}),-0,-0.268,0.465,0.05,0,0);
+  head.add(lipU,lipL);
+
+  // EARS
+  [-0.52,0.52].forEach(x=>{
+    const ear=sphere(0.1,skinMat,x,-0.04,0.02,10,10);
+    ear.scale.set(0.45,0.65,0.5);
+    head.add(ear);
+  });
+
+  // HAIR — layered mesh on top + sides
+  const hairTop=new THREE.Mesh(new THREE.SphereGeometry(0.545,20,20,0,Math.PI*2,0,Math.PI*0.5),hairMat);
+  hairTop.position.set(0,0.04,0);hairTop.castShadow=true;
+  head.add(hairTop);
+  // side hair
+  [-0.44,0.44].forEach((x,i)=>{
+    const hs=box(0.12,0.38,0.5,hairMat,x,0.05,-0.04);
+    head.add(hs);
+  });
+  // back hair
+  const hairBack=box(0.82,0.5,0.18,hairMat,0,0.04,-0.44);
+  head.add(hairBack);
+  // fringe
+  const fringe=box(0.76,0.12,0.28,hairMat,0,0.34,0.3,-0.3,0,0);
+  head.add(fringe);
+
+  head.position.set(0,1.72,0);
+  avatar.add(head);
+
+  /* ── NECK ── */
+  const neck=cyl(0.16,0.18,0.28,skinMat,0,1.46,0);
+  avatar.add(neck);
+
+  /* ── TORSO ── */
+  const torso=new THREE.Group();
+  // chest
+  const chest=box(0.92,1.0,0.52,shirtMat,0,0.9,0);
+  chest.scale.set(1,1,1);
+  torso.add(chest);
+  // collar
+  const collar=box(0.38,0.1,0.3,darkMat,0,1.36,0.12);
+  torso.add(collar);
+  // tech circuit lines on shirt (thin box strips)
+  [[0.24,0.02,0.45,0,1.0,0.27],[-0.24,0.02,0.45,0,0.8,0.27]].forEach(p=>{
+    const strip=box(p[0],p[1],p[2],new THREE.MeshStandardMaterial({color:0x00ffcc,emissive:new THREE.Color(0x00ffcc),emissiveIntensity:0.9,transparent:true,opacity:0.6}),p[3],p[4],p[5]);
+    torso.add(strip);
+  });
+  // belt area
+  const belt=box(0.94,0.1,0.54,darkMat,0,0.42,0);
+  torso.add(belt);
+  // lower torso / hips
+  const hips=box(0.88,0.48,0.5,darkMat,0,0.18,0);
+  torso.add(hips);
+  avatar.add(torso);
+
+  /* ── ARMS ── */
+  [[-0.58,1.22,0.12,0.08],[0.58,1.22,0.12,-0.08]].forEach(([x,y,z,rz])=>{
+    const ag=new THREE.Group();
+    // upper arm
+    const ua=box(0.22,0.44,0.22,shirtMat,0,0,0,0,0,rz);
+    ua.position.set(x,y,z);
+    // forearm
+    const fa=box(0.18,0.42,0.2,skinMat,x+(x<0?-0.06:0.06),y-0.42,z+0.04,0.15,0,rz*0.5);
+    // hand
+    const hand=sphere(0.13,skinMat,x+(x<0?-0.1:0.1),y-0.7,z+0.08,12,12);
+    avatar.add(ua,fa,hand);
+  });
+
+  /* ── HOLOGRAPHIC BADGE on chest ── */
+  const badge=new THREE.Group();
+  const badgeBase=box(0.32,0.18,0.04,holoBadgeMat,0,0,0);
+  const badgeInner=box(0.26,0.12,0.05,new THREE.MeshStandardMaterial({color:0x8a50ff,emissive:new THREE.Color(0x8a50ff),emissiveIntensity:1,transparent:true,opacity:0.8}),0,0,0.01);
+  badge.add(badgeBase,badgeInner);
+  badge.position.set(0,1.08,0.3);
+  badge.rotation.x=-0.1;
+  avatar.add(badge);
+
+  /* ── FLOATING HOLO ELEMENTS around avatar ── */
+  const holoGroup=new THREE.Group();
+
+  // floating rings
+  [1.2,1.55,1.9].forEach((y,i)=>{
+    const ringGeo=new THREE.TorusGeometry(0.72+i*0.08,0.008,8,60);
+    const ringMat=new THREE.MeshStandardMaterial({
+      color:[0x8a50ff,0x00ffcc,0xff2d78][i],
+      emissive:new THREE.Color([0x8a50ff,0x00ffcc,0xff2d78][i]),
+      emissiveIntensity:0.8,transparent:true,opacity:0.5
+    });
+    const ring=new THREE.Mesh(ringGeo,ringMat);
+    ring.rotation.x=Math.PI/2;
+    ring.rotation.y=i*0.4;
+    ring.position.y=y-0.5;
+    ring.userData={baseY:y-0.5,speed:0.4+i*0.15,phase:i*1.1};
+    holoGroup.add(ring);
+  });
+
+  // floating orb particles
+  const orbColors=[0x8a50ff,0x00ffcc,0xff2d78,0xffcc00,0x00c8ff];
+  Array.from({length:14}).forEach((_,i)=>{
+    const angle=i/14*Math.PI*2;
+    const r=0.95+Math.sin(i*1.3)*0.2;
+    const om=new THREE.Mesh(
+      new THREE.SphereGeometry(0.028+Math.random()*0.018,8,8),
+      new THREE.MeshStandardMaterial({
+        color:orbColors[i%5],
+        emissive:new THREE.Color(orbColors[i%5]),
+        emissiveIntensity:1.2,transparent:true,opacity:0.85
+      })
+    );
+    om.position.set(Math.cos(angle)*r,1.0+Math.sin(i*0.7)*0.5,Math.sin(angle)*r);
+    om.userData={angle,r,baseY:om.position.y,speed:0.3+Math.random()*0.4,phase:Math.random()*Math.PI*2};
+    holoGroup.add(om);
+  });
+
+  // DNA helix / data streams (pairs of spheres)
+  Array.from({length:10}).forEach((_,i)=>{
+    const t=i/10;
+    const angle=t*Math.PI*3;
+    [1,-1].forEach(side=>{
+      const dot=new THREE.Mesh(
+        new THREE.SphereGeometry(0.022,6,6),
+        new THREE.MeshStandardMaterial({
+          color:side>0?0x00ffcc:0x8a50ff,
+          emissive:new THREE.Color(side>0?0x00ffcc:0x8a50ff),
+          emissiveIntensity:1,transparent:true,opacity:0.7
+        })
+      );
+      dot.position.set(Math.cos(angle)*0.5*side,0.6+t*1.8,Math.sin(angle)*0.4*side-0.6);
+      dot.userData={helixT:t,helixSide:side,baseAngle:angle};
+      holoGroup.add(dot);
+    });
+  });
+
+  scene.add(holoGroup);
+
+  /* ── GROUND GLOW ── */
+  const groundGeo=new THREE.CircleGeometry(1.1,40);
+  const groundMat=new THREE.MeshStandardMaterial({
+    color:0x8a50ff,emissive:new THREE.Color(0x8a50ff),
+    emissiveIntensity:0.35,transparent:true,opacity:0.18,
+    roughness:0.2,metalness:0.8
+  });
+  const ground=new THREE.Mesh(groundGeo,groundMat);
+  ground.rotation.x=-Math.PI/2;
+  ground.position.y=-0.01;
+  scene.add(ground);
+
+  /* ── AVATAR POSITION ── */
+  avatar.position.y=-0.85;
+  avatar.scale.setScalar(0.01); // start tiny for entrance
+
+  /* ── MOUSE INTERACTION ── */
+  let targetRotY=0,targetRotX=0,currentRotY=0,currentRotX=0;
+  wrap.addEventListener('mousemove',e=>{
+    const r=wrap.getBoundingClientRect();
+    const nx=(e.clientX-r.left)/r.width-.5;
+    const ny=(e.clientY-r.top)/r.height-.5;
+    targetRotY=nx*0.55;
+    targetRotX=-ny*0.25;
+  });
+  wrap.addEventListener('mouseleave',()=>{targetRotY=0;targetRotX=0;});
+
+  /* ── ENTRANCE ANIMATION ── */
+  let entranceDone=false,entranceT=0;
+  const ENTRANCE_DUR=1.8;
+
+  /* ── RENDER LOOP ── */
+  let t2=0;
+  function renderAvatar(){
+    requestAnimationFrame(renderAvatar);
+    t2+=0.016;
+
+    // Entrance scale-up + float-in
+    if(!entranceDone){
+      entranceT=Math.min(1,entranceT+0.016/ENTRANCE_DUR);
+      const ease=1-Math.pow(1-entranceT,3);
+      avatar.scale.setScalar(ease);
+      avatar.position.y=-0.85+ease*0.15;
+      if(entranceT>=1)entranceDone=true;
+    }
+
+    // Mouse tilt with spring
+    currentRotY+=(targetRotY-currentRotY)*0.07;
+    currentRotX+=(targetRotX-currentRotX)*0.07;
+    avatar.rotation.y=currentRotY;
+    avatar.rotation.x=currentRotX;
+
+    // Idle body bob
+    avatar.position.y=-0.7+Math.sin(t2*0.8)*0.04;
+
+    // Head subtle look-around
+    head.rotation.y=Math.sin(t2*0.4)*0.08+currentRotY*0.5;
+    head.rotation.x=Math.sin(t2*0.3)*0.04+currentRotX;
+
+    // Blink
+    if(Math.floor(t2*3)%22===0){
+      skull.scale.y=0.1;
+    } else {
+      skull.scale.y+=(1-skull.scale.y)*0.4;
+    }
+
+    // Badge pulse
+    badge.children[1].material.emissiveIntensity=0.8+Math.sin(t2*2.5)*0.4;
+    badge.rotation.y=Math.sin(t2*0.5)*0.1;
+
+    // Holo rings rotate + float
+    holoGroup.children.forEach(c=>{
+      if(c.userData.speed){
+        c.rotation.y+=c.userData.speed*0.016;
+        if(c.userData.baseY!==undefined){
+          c.position.y=c.userData.baseY+Math.sin(t2*c.userData.speed+c.userData.phase)*0.06;
+        }
+      }
+    });
+
+    // Orb particles orbit
+    holoGroup.children.forEach(c=>{
+      if(c.userData.angle!==undefined&&c.userData.r!==undefined&&!c.userData.helixT){
+        const a=c.userData.angle+t2*c.userData.speed;
+        c.position.x=Math.cos(a)*c.userData.r;
+        c.position.z=Math.sin(a)*c.userData.r;
+        c.position.y=c.userData.baseY+Math.sin(t2*c.userData.speed*1.3+c.userData.phase)*0.18;
+        c.material.opacity=0.6+Math.sin(t2*c.userData.speed*2+c.userData.phase)*0.25;
+      }
+    });
+
+    // DNA helix spin
+    holoGroup.children.forEach(c=>{
+      if(c.userData.helixT!==undefined){
+        const a=c.userData.baseAngle+t2*0.6;
+        c.position.x=Math.cos(a)*0.5*c.userData.helixSide;
+        c.position.z=Math.sin(a)*0.4*c.userData.helixSide-0.6;
+      }
+    });
+
+    // Lights pulse
+    fill.intensity=1.8+Math.sin(t2*1.2)*0.5;
+    rim.intensity=1.4+Math.cos(t2*0.9)*0.4;
+    top.intensity=2+Math.sin(t2*0.7+1)*0.6;
+
+    // Ground glow breathe
+    groundMat.emissiveIntensity=0.28+Math.sin(t2*1.1)*0.12;
+    groundMat.opacity=0.15+Math.sin(t2*1.1)*0.05;
+
+    renderer.render(scene,camera);
+  }
+  renderAvatar();
+})();
+</script>
+</body>
+</html>

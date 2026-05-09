@@ -1,0 +1,16 @@
+{
+  "name": "portfolio_enhanced",
+  "version": "1.0.0",
+  "description": "This is a highly interactive, beautifully designed single-page portfolio website tailored for Hrishikesh, an AI & Machine Learning Engineer. It features a modern, futuristic aesthetic with a dark theme, neon accents, and smooth 3D animations.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "netlify-cli": "^26.0.1"
+  }
+}
